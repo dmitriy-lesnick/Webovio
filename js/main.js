@@ -3,60 +3,78 @@ const navLinks = document.querySelectorAll(".header__link");
 const navList = document.querySelector(".header__list");
 const burger = document.querySelector(".header__burger");
 const burgerWrp = document.querySelector(".header__burger-inner-wrp");
+const content = document.querySelectorAll("[data-content = content]");
 
-window.addEventListener('scroll', () => {
+window.addEventListener('scroll', function () {
+    activationHeader()
+    setActiveNavLinks()
+});
+
+function activationHeader() {
     if (scrollY > 50) {
         header.classList.add("header--active")
     } else {
         header.classList.remove("header--active")
     }
-});
+}
+
+function setActiveNavLinks() {
+    [...navLinks].forEach(e => e.classList.remove('header__link--active'))
+
+    if (window.scrollY < content[0].clientHeight / 2) {
+        let link = document.querySelector(`[href = "#${content[0].id}"]`)
+        link.classList.add('header__link--active')
+        return
+    } else if (innerHeight + scrollY >= document.documentElement.scrollHeight - header.clientHeight) {
+        let link = document.querySelector(`[href = "#${content[content.length - 1].id}"]`)
+        link.classList.add('header__link--active')
+        return
+    }
+
+    for (let i = content.length - 2; i > 0; --i) {
+        if (window.scrollY > content[i].getBoundingClientRect().top - header.clientHeight) {
+            let link = document.querySelector(`[href = "#${content[i].id}"]`)
+            link.classList.add('header__link--active')
+            break
+        }
+    }
+}
 
 burger.addEventListener('click', () => {
     navList.classList.toggle('header__list--active');
     burgerWrp.classList.toggle('header__burger-inner-wrp--close');
     navLinksAddClass();
-    if (navList.className == "header__list header__list--active") {
-        navList.classList.add('header__list--transition')
-    } else {
-        transitionClassRemove();
-    }
-
-
 });
 
 function navLinksAddClass() {
     navLinks.forEach(link => {
         if (burgerWrp.className == "header__burger-inner-wrp header__burger-inner-wrp--close") {
-            link.classList.add('header__link--active')
+            link.classList.add('header__link--visible')
         } else {
-            link.classList.remove('header__link--active')
+            link.classList.remove('header__link--visible')
         }
     });
 };
 
-function transitionClassRemove() {
-    setTimeout(() => {
-        navList.classList.remove('header__list--transition')
-    }, 400);
-};
 
 function scrollToElement(id) {
-    let headerHight = header.clientHeight
     let scrollTarget = document.getElementById(id)
-    let elementTarget = scrollTarget.getBoundingClientRect().top - headerHight
-    window.scrollBy({
-        top: elementTarget,
-        behavior: "smooth"
-    });
+    let top = scrollTarget.getBoundingClientRect().top - header.clientHeight
+    scrollByY(top)
 
     if (window.innerWidth <= 768) {
         burgerWrp.classList.remove('header__burger-inner-wrp--close');
         navList.classList.remove('header__list--active');
         navLinksAddClass();
-        transitionClassRemove();
     }
 };
+
+function scrollByY(top) {
+    window.scrollBy({
+        top,
+        behavior: "smooth"
+    });
+}
 
 navLinks.forEach(link => {
     link.addEventListener('click', (event) => {

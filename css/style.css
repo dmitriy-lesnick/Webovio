@@ -103,7 +103,7 @@
   -o-transition: 400ms ease-in-out all;
   pointer-events: none;
 }
-.header__link--active {
+.header__link--visible {
   opacity: 100%;
   transform: translateX(0);
   -webkit-transform: translateX(0);
@@ -111,6 +111,9 @@
   -ms-transform: translateX(0);
   -o-transform: translateX(0);
   pointer-events: visible;
+}
+.header__link--active {
+  color: #ffd723;
 }
 .header__link:hover {
   color: #ffd723;
