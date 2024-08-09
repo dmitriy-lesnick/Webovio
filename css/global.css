@@ -4,4 +4,5 @@ body {
   font-style: normal;
   font-size: 16px;
   color: rgba(33, 56, 66, 0.6);
+  overflow-x: hidden;
 }/*# sourceMappingURL=global.css.map */
